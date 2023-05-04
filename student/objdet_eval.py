@@ -101,16 +101,18 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
     # compute positives and negatives for precision/recall
     
     ## step 1 : compute the total number of positives present in the scene
+    
+    # labels_valid is a list of boolean values indicating whether each detection is valid or not
+    
+    all_positives = labels_valid.sum() # sum up the number of valid detections
+    
+    # step 2 : compute the number of false negatives
+    
+    false_negatives = all_positives - true_positives # subtract the number of correct detections from the number of valid detections
 
-    all_positives = labels_valid.sum()
-
-    ## step 2 : compute the number of false negatives
-
-    false_negatives = all_positives - true_positives
-
-    ## step 3 : compute the number of false positives
-
-    false_positives =  len(detections) - true_positives
+    # step 3 : compute the number of false positives
+    
+    false_positives =  len(detections) - true_positives # subtract the number of correct detections from the total number of detections
     
     #######
     ####### ID_S4_EX2 END #######     
@@ -139,11 +141,11 @@ def compute_performance_stats(det_performance_all, config):
 
     ## step 1 : extract the total number of positives, true positives, false negatives and false positives
 
-    pos_negs_arr = np.asarray(pos_negs).transpose()
-    positives = sum(pos_negs_arr[0])
-    true_positives = sum(pos_negs_arr[1])
-    false_negatives = sum(pos_negs_arr[2])
-    false_positives = sum(pos_negs_arr[3])
+    pos_negs_arr = np.asarray(pos_negs).transpose()         # convert the list of tuples into a numpy array and transpose it to get four rows
+    positives = sum(pos_negs_arr[0])                        # sum up the first row to get the number of valid detections
+    true_positives = sum(pos_negs_arr[1])                   # sum up the second row to get the number of correct detections
+    false_negatives = sum(pos_negs_arr[2])                  # sum up the third row to get the number of false negatives
+    false_positives = sum(pos_negs_arr[3])                  # sum up the fourth row to get the number of false positives    
     
     ## step 2 : compute precision
 
